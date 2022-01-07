@@ -18,42 +18,16 @@ const createPlayer = (name, marker) => {
 };
 
 // MODULE DISPLAY CONTROLLER
-const displayController = ((playerOne, playerTwo) => {
+const displayController = ((_playerOne, _playerTwo) => {
 
-    playerOne = createPlayer('Player 1', 'X');
-    playerTwo = createPlayer('Player 2', 'O');
+    _playerOne = createPlayer('Player 1', 'X');
+    _playerTwo = createPlayer('Player 2', 'O');
 
-    turn = 0;
-
-    const pickMarker = () => {
-        if (turn === 0) {
-
-            const choiceO = document.querySelector('.choiceO');
-            const choiceX = document.querySelector('.choiceX');
-
-            choiceO.addEventListener('click', () => {
-                console.log('this was clicked');
-                playerOne.marker = choiceO.textContent;
-                playerTwo.marker = choiceX.textContent;
-            });
-            choiceX.addEventListener('click', () => {
-                playerOne.marker = choiceX.textContent;
-                playerTwo.marker = choiceO.textContent;
-            });
-
-        } else {
-            alert("The game's not over yet!");
-        }
-
-        console.log(playerOne);
-
-    };
-    
+    let turn = 0;  
 
     // Show Tic Tac Toe Board
     const createGameboard = () => {
         const _obj = document.querySelector('#gameboard');
-        pickMarker();
 
         for (i = 0; i < gameboard.gameArray.length; i++) {
 
@@ -65,19 +39,20 @@ const displayController = ((playerOne, playerTwo) => {
 
             // add marker if you click on it
             newDiv.addEventListener('click', () => {
+
                 const theGameBoard = gameboard.gameArray;
                 let index = newDiv.dataset.grid - 1;
 
                 if (theGameBoard[index] === '') {
                     if (turn === 0 || turn % 2 === 0) {
-                        let marker = playerOne.marker;
+                        let marker = _playerOne.marker;
                         theGameBoard[index] = marker;
                         newDiv.textContent = theGameBoard[index];
                         turn++;
                         console.log("Turn " + turn, gameboard.gameArray)
                     } else {
                         let index = newDiv.dataset.grid - 1;
-                        let marker = playerTwo.marker;
+                        let marker = _playerTwo.marker;
                         const theGameBoard = gameboard.gameArray;
                         theGameBoard[index] = marker;
                         newDiv.textContent = theGameBoard[index];
@@ -93,24 +68,55 @@ const displayController = ((playerOne, playerTwo) => {
         }
     };
 
+    const choiceO = document.querySelector('.choiceO');
+    const choiceX = document.querySelector('.choiceX');
+    
+    const pickMarker = () => {
+        choiceO.addEventListener('click', () => {
+            if (turn === 0) {
+                console.log('O was clicked');
+                _playerOne.marker = choiceO.textContent;
+                _playerTwo.marker = choiceX.textContent;
+            } else {
+                alert("The game's not over yet!");
+            }
+        });
+
+        choiceX.addEventListener('click', () => {
+            if (turn === 0) {
+                console.log('X was clicked');
+                _playerOne.marker = choiceX.textContent;
+                _playerTwo.marker = choiceO.textContent;
+            } else {
+                alert("The game's not over yet!");
+            }
+        });
+
+        console.log(_playerOne);
+
+    };
+
     // Ancillary Functions
 
     // Expose these items
     return {
-        createGameboard
+        createGameboard,
+        pickMarker
     };
 
 })();
 
 displayController.createGameboard();
+displayController.pickMarker();
+
 // displayController.pickMarker();
 
-// const playerOne = createPlayer('Player 1', 'X');
-// // playerOne.setMarker();
-// console.log(playerOne);
+// const _playerOne = createPlayer('Player 1', 'X');
+// // _playerOne.setMarker();
+// console.log(_playerOne);
 
-// const playerTwo = createPlayer('Player 2', 'O');
-// console.log(playerTwo);
+// const _playerTwo = createPlayer('Player 2', 'O');
+// console.log(_playerTwo);
 
 
 // PSEDUO CODE //
