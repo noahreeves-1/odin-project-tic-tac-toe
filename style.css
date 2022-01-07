@@ -1,0 +1,70 @@
+body {
+    margin: 0px;
+}
+
+#ttt {
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+    
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 50px;
+    color: rgb(50, 50, 50);
+}
+
+/* GAMEBOARD */
+#gameboard {
+    width: 330px;
+    height: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 100px;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.boardPiece {
+    background-color: rgb(215, 240, 248);
+    display: flex;
+    flex-basis: 32.67%;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 81px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: gray;
+}
+
+/* GAME BOARD */
+.chooseCard {
+    display: flex;
+    justify-content: center;
+}
+
+#markerInstructions {
+    display: flex;
+    justify-content: center;
+    
+    margin-bottom: 30px;
+
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 16px;
+    color: gray;
+}
+
+.choices {
+    display: flex;
+}
+
+.choice {
+    padding: 15px 60px;
+    margin: 10px;
+
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 30px;
+    color: rgb(50, 50, 50);
+    background-color: lightgray;
+}
