@@ -27,8 +27,8 @@ body {
 .boardPiece {
     background-color: rgb(215, 240, 248);
     display: flex;
-    flex-basis: 32.67%;
-    height: auto;
+    flex-basis: 32%;
+    height: 33%;
     justify-content: center;
     align-items: center;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -38,12 +38,7 @@ body {
     border-color: gray;
 }
 
-/* GAME BOARD */
-.chooseCard {
-    display: flex;
-    justify-content: center;
-}
-
+/* CHOOSE MARKER */
 #markerInstructions {
     display: flex;
     justify-content: center;
@@ -51,12 +46,13 @@ body {
     margin-bottom: 30px;
 
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 16px;
+    font-size: 17px;
     color: gray;
 }
 
 .choices {
     display: flex;
+    justify-content: center;
 }
 
 .choice {
@@ -64,7 +60,7 @@ body {
     margin: 10px;
 
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 30px;
+    font-size: 23px;
     color: rgb(50, 50, 50);
     background-color: lightgray;
 }

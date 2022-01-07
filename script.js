@@ -23,10 +23,37 @@ const displayController = ((playerOne, playerTwo) => {
     playerOne = createPlayer('Player 1', 'X');
     playerTwo = createPlayer('Player 2', 'O');
 
+    turn = 0;
+
+    const pickMarker = () => {
+        if (turn === 0) {
+
+            const choiceO = document.querySelector('.choiceO');
+            const choiceX = document.querySelector('.choiceX');
+
+            choiceO.addEventListener('click', () => {
+                console.log('this was clicked');
+                playerOne.marker = choiceO.textContent;
+                playerTwo.marker = choiceX.textContent;
+            });
+            choiceX.addEventListener('click', () => {
+                playerOne.marker = choiceX.textContent;
+                playerTwo.marker = choiceO.textContent;
+            });
+
+        } else {
+            alert("The game's not over yet!");
+        }
+
+        console.log(playerOne);
+
+    };
+    
+
     // Show Tic Tac Toe Board
     const createGameboard = () => {
         const _obj = document.querySelector('#gameboard');
-        let turn = 0;
+        pickMarker();
 
         for (i = 0; i < gameboard.gameArray.length; i++) {
 
@@ -36,6 +63,7 @@ const displayController = ((playerOne, playerTwo) => {
             newDiv.classList.add('boardPiece', i + 1);
             newDiv.dataset.grid = i + 1;
 
+            // add marker if you click on it
             newDiv.addEventListener('click', () => {
                 const theGameBoard = gameboard.gameArray;
                 let index = newDiv.dataset.grid - 1;
@@ -63,21 +91,19 @@ const displayController = ((playerOne, playerTwo) => {
             newDiv.append(gameboard.gameArray[i]);
             _obj.appendChild(newDiv);
         }
-    }
+    };
 
     // Ancillary Functions
-    const playTTT = () => {
-        
-    }
 
-        // Expose these items
-        return {
-            createGameboard,
-            playTTT
-        }
+    // Expose these items
+    return {
+        createGameboard
+    };
+
 })();
 
 displayController.createGameboard();
+// displayController.pickMarker();
 
 // const playerOne = createPlayer('Player 1', 'X');
 // // playerOne.setMarker();
@@ -99,4 +125,3 @@ displayController.createGameboard();
 // after a player places a Marker, their turn is over
 // on their turn the computer will pick a random box (DUMB AI)
 // if the user or computer hits 3 grids in a row, column, or diagonally, they win
-
