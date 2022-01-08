@@ -1,102 +1,224 @@
-// MODULE GAMEBOARD
+// MODULE GAMEBOARD //
 
 const gameboard = {
     gameArray: ['', '', '', '', '', '', '', '', '']
 };
 
 
-// FACTORY FUNCTION PLAYER
+// FACTORY FUNCTION PLAYER //
 const createPlayer = (name, marker) => {
 
     playerName = name;
-    playerMarker = marker
+    playerMarker = marker;
+    const wins = 0;
 
     return {
         name,
         marker,
+        wins
     }
 };
 
-// MODULE DISPLAY CONTROLLER
+// MODULE DISPLAY CONTROLLER //
 const displayController = ((_playerOne, _playerTwo) => {
 
     _playerOne = createPlayer('Player 1', 'X');
-    _playerTwo = createPlayer('Player 2', 'O');
+    _playerTwo = createPlayer('Computer', 'O');
 
-    let turn = 0;  
+    let turn = 0;
+
+    const _gameArray = gameboard.gameArray;
+
+    // Private Functions
+    const _gameLogic = () => {
+        if (turn > 0) {
+            let marker = "";
+            let winner = '';
+
+            const _ultimateWinner = () => {
+                if (_playerOne.wins === 3) {
+                    let _ultimateWinner = _playerOne.name;
+                    alert(`${_ultimateWinner} wins best out of five!`)
+                } else if (_playerTwo.wins === 3) {
+                    let _ultimateWinner = _playerTwo.name;
+                    alert(`${_ultimateWinner} wins best out of five!`)
+                }
+            };
+
+            const _resetGame = () => {
+                
+                console.log('resetGame() ran!')
+
+                const boardPieces = document.querySelectorAll('.boardPiece');
+                boardPieces.forEach((piece) => {
+                    piece.textContent = '';
+                })
+                for (let i = 0; i < _gameArray.length; i++) {
+                    _gameArray[i] = ''
+                };
+                winner = '';
+                turn = 0;
+
+                console.log(_gameArray)
+            };
+
+            const _assignWinner = () => {
+                console.log('assignWinner() ran');
+                if (marker === _playerOne.marker) {
+                    winner = _playerOne;
+                    winner.wins++;
+                    alert(`${winner.name} wins!`);
+                    console.log(winner)
+                    _ultimateWinner();
+                    setTimeout(_resetGame, 2500);
+                } else if (marker === _playerTwo.marker) {
+                    winner = _playerTwo;
+                    winner.wins++;
+                    alert(`${winner.name} wins!`);
+                    console.log(winner);
+                    _ultimateWinner();
+                    setTimeout(_resetGame, 2500);
+                } else {
+                    return
+                }
+            };
+
+            // check rows
+            if (_gameArray[0] != '' &&
+                _gameArray[0] === _gameArray[1] &&
+                _gameArray[1] === _gameArray[2]) {
+                marker = _gameArray[0];
+                _assignWinner();
+            } else if (_gameArray[3] != '' &&
+                _gameArray[3] === _gameArray[4] &&
+                _gameArray[4] === _gameArray[5]) {
+                marker = _gameArray[3];
+                _assignWinner();
+            } else if (_gameArray[6] != '' &&
+                _gameArray[6] === _gameArray[7] &&
+                _gameArray[7] === _gameArray[8]) {
+                marker = _gameArray[6];
+                _assignWinner();
+
+                // check columns
+            } else if (_gameArray[0] != '' &&
+                _gameArray[0] === _gameArray[3] &&
+                _gameArray[3] === _gameArray[6]) {
+                marker = _gameArray[0];
+                _assignWinner();
+            } else if (_gameArray[1] != '' &&
+                _gameArray[1] === _gameArray[4] &&
+                _gameArray[4] === _gameArray[7]) {
+                marker = _gameArray[1];
+                _assignWinner();
+            } else if (_gameArray[2] != '' &&
+                _gameArray[2] === _gameArray[5] &&
+                _gameArray[5] === _gameArray[8]) {
+                marker = _gameArray[2];
+                _assignWinner();
+
+                // check diagonals
+            } else if (_gameArray[0] != '' &&
+                _gameArray[0] === _gameArray[4] &&
+                _gameArray[4] === _gameArray[8]) {
+                marker = _gameArray[0];
+                _assignWinner();
+            } else if (_gameArray[2] != '' && _gameArray[2] === _gameArray[4] && _gameArray[4] === _gameArray[6]) {
+                marker = _gameArray[2];
+                _assignWinner();
+            } else {
+                console.log(`no winner yet`)
+            };
+
+            // check for TIE
+            if (turn === 9 && !winner) {
+                alert('Tied!');
+            };
+        };
+    };
 
     // Show Tic Tac Toe Board
     const createGameboard = () => {
-        const _obj = document.querySelector('#gameboard');
 
         for (i = 0; i < gameboard.gameArray.length; i++) {
 
-            // create DIV for each board piece (9) with CLASS as boardPiece
-            const newDiv = document.createElement('div');
+            const _obj = document.querySelector('#gameboard');
+            const _newDiv = document.createElement('div'); // create DIV for each board piece (9) with CLASS as boardPiece
 
-            newDiv.classList.add('boardPiece', i + 1);
-            newDiv.dataset.grid = i + 1;
+            _newDiv.classList.add('boardPiece', i + 1);
+            _newDiv.dataset.grid = i + 1;
+            _newDiv.append(gameboard.gameArray[i]);
+            _obj.appendChild(_newDiv);
+            _newDiv.addEventListener('click', () => { // add marker if you click on it
+                let _index = _newDiv.dataset.grid - 1;
 
-            // add marker if you click on it
-            newDiv.addEventListener('click', () => {
-
-                const theGameBoard = gameboard.gameArray;
-                let index = newDiv.dataset.grid - 1;
-
-                if (theGameBoard[index] === '') {
+                if (_gameArray[_index] === '') {
                     if (turn === 0 || turn % 2 === 0) {
-                        let marker = _playerOne.marker;
-                        theGameBoard[index] = marker;
-                        newDiv.textContent = theGameBoard[index];
+                        let _marker = _playerOne.marker;
+
+                        _gameArray[_index] = _marker;
+                        _newDiv.textContent = _gameArray[_index];
                         turn++;
+
+                        setTimeout(_gameLogic, 100);
+
                         console.log("Turn " + turn, gameboard.gameArray)
                     } else {
-                        let index = newDiv.dataset.grid - 1;
-                        let marker = _playerTwo.marker;
-                        const theGameBoard = gameboard.gameArray;
-                        theGameBoard[index] = marker;
-                        newDiv.textContent = theGameBoard[index];
+                        let _index = _newDiv.dataset.grid - 1;
+                        let _marker = _playerTwo.marker;
+
+                        _gameArray[_index] = _marker;
+                        _newDiv.textContent = _gameArray[_index];
                         turn++;
-                        console.log("Turn " + turn, gameboard.gameArray)
+
+                        _gameLogic();
+
+                        console.log("Turn " + turn, _gameArray)
                     }
                 } else {
                     alert('This spot is taken!');
                 }
-            })
-            newDiv.append(gameboard.gameArray[i]);
-            _obj.appendChild(newDiv);
-        }
-    };
+            }); // END OF EVENT LISTENER
 
-    const choiceO = document.querySelector('.choiceO');
-    const choiceX = document.querySelector('.choiceX');
+        }; // END OF FOR LOOP
+
+    };
     
+    // X or O picker
     const pickMarker = () => {
-        choiceO.addEventListener('click', () => {
+
+        const _choiceO = document.querySelector('.choiceO');
+        const _choiceX = document.querySelector('.choiceX');
+
+        _choiceO.addEventListener('click', () => {
             if (turn === 0) {
                 console.log('O was clicked');
-                _playerOne.marker = choiceO.textContent;
-                _playerTwo.marker = choiceX.textContent;
+                _playerOne.marker = _choiceO.textContent;
+                _playerTwo.marker = _choiceX.textContent;
+                _choiceO.style.backgroundColor = "rgb(215, 240, 248)";
+                _choiceX.style.backgroundColor = '#DEDEDE';
+
+                console.log(_playerOne);
             } else {
                 alert("The game's not over yet!");
             }
         });
 
-        choiceX.addEventListener('click', () => {
+        _choiceX.addEventListener('click', () => {
             if (turn === 0) {
                 console.log('X was clicked');
-                _playerOne.marker = choiceX.textContent;
-                _playerTwo.marker = choiceO.textContent;
+                _playerOne.marker = _choiceX.textContent;
+                _playerTwo.marker = _choiceO.textContent;
+                _choiceX.style.backgroundColor = "rgb(215, 240, 248)";
+                _choiceO.style.backgroundColor = "#DEDEDE";
+
+                console.log(_playerOne);
             } else {
                 alert("The game's not over yet!");
             }
         });
 
-        console.log(_playerOne);
-
     };
-
-    // Ancillary Functions
 
     // Expose these items
     return {
@@ -108,26 +230,3 @@ const displayController = ((_playerOne, _playerTwo) => {
 
 displayController.createGameboard();
 displayController.pickMarker();
-
-// displayController.pickMarker();
-
-// const _playerOne = createPlayer('Player 1', 'X');
-// // _playerOne.setMarker();
-// console.log(_playerOne);
-
-// const _playerTwo = createPlayer('Player 2', 'O');
-// console.log(_playerTwo);
-
-
-// PSEDUO CODE //
-
-// create two players - one for the user (me) and one for the computer
-//      each player should have a value for their symbol (either 'X' or 'O')
-
-// create the gameboard. it should consist of 9 square grids
-// clicking each grid should turn the board 'X' or 'O' depending on your symbol
-
-// the user always goes first
-// after a player places a Marker, their turn is over
-// on their turn the computer will pick a random box (DUMB AI)
-// if the user or computer hits 3 grids in a row, column, or diagonally, they win
