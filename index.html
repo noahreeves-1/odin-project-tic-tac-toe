@@ -11,18 +11,32 @@
 <body>
     <main>
         <h1 id="ttt">Tic Tac Toe</h1>
+        <div class="display"></div>
+        <div class="winCounter">Wins:</div>
         <div id=gameboard >
 <!-- GAMEBOARD PLACEHOLDER -->
         </div>
         <div id="markerInstructions">
             Choose your marker
         </div>
-        <!-- <div class="chooseCard"> -->
-            <div class="choices">
-                <div class="choice choiceX">X</div>
-                <div class="choice choiceO">O</div>
-            </div>
-        <!-- </div> -->
+
+        <div class="choices">
+            <div class="choice choiceX">X</div>
+            <div class="choice choiceO">O</div>
+        </div>
+
+        <button class="quit-button">
+            Q U I T
+        </button>
+        
+        <div class="name-text">
+            What's your name?
+        </div>
+
+        <form class="name-card">
+            <input type="text" id="name-input" name="Name">
+            <button id="submit-name" name="Submit">Set Name</button>
+        </form>
         
     </main>
 </body>

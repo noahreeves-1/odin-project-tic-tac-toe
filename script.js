@@ -22,12 +22,14 @@ const createPlayer = (name, marker) => {
 // MODULE DISPLAY CONTROLLER //
 const displayController = ((_playerOne, _playerTwo) => {
 
-    _playerOne = createPlayer('Player 1', 'X');
+    _playerOne = createPlayer('fdsa', 'X');
     _playerTwo = createPlayer('Computer', 'O');
 
     let turn = 0;
 
     const _gameArray = gameboard.gameArray;
+    const display = document.querySelector('.display');
+    const winCounter = document.querySelector('.winCounter');
 
     // Private Functions
     const _gameLogic = () => {
@@ -38,10 +40,22 @@ const displayController = ((_playerOne, _playerTwo) => {
             const _ultimateWinner = () => {
                 if (_playerOne.wins === 3) {
                     let _ultimateWinner = _playerOne.name;
-                    alert(`${_ultimateWinner} wins best out of five!`)
+                    let _ultimateWinnerWins = _playerOne.wins;
+                    display.textContent = `${_ultimateWinner} won best out of five!`;
+                    winCounter.textContent = `Wins: ${_ultimateWinnerWins}`;
+                    winner = '';
+                    _playerOne.wins = 0;
+                    _playerTwo.wins = 0;
+                    turn = 0;
                 } else if (_playerTwo.wins === 3) {
                     let _ultimateWinner = _playerTwo.name;
-                    alert(`${_ultimateWinner} wins best out of five!`)
+                    let _ultimateWinnerWins = _playerTwo.wins;
+                    display.textContent = `${_ultimateWinner} won best out of five!`;
+                    winCounter.textContent = `Wins: ${_ultimateWinnerWins}`;
+                    winner = '';
+                    _playerOne.wins = 0;
+                    _playerTwo.wins = 0;
+                    turn = 0;
                 }
             };
 
@@ -58,24 +72,27 @@ const displayController = ((_playerOne, _playerTwo) => {
                 };
                 winner = '';
                 turn = 0;
+                display.textContent = "";
+                winCounter.textContent = `Wins: ${_playerOne.wins}`
 
                 console.log(_gameArray)
             };
 
             const _assignWinner = () => {
+
                 console.log('assignWinner() ran');
                 if (marker === _playerOne.marker) {
                     winner = _playerOne;
                     winner.wins++;
-                    alert(`${winner.name} wins!`);
-                    console.log(winner)
+                    display.textContent = `${winner.name} won!`;
+                    winCounter.textContent = `Wins: ${winner.wins}`;
                     _ultimateWinner();
                     setTimeout(_resetGame, 2500);
                 } else if (marker === _playerTwo.marker) {
                     winner = _playerTwo;
                     winner.wins++;
-                    alert(`${winner.name} wins!`);
-                    console.log(winner);
+                    display.textContent = `${winner.name} won!`;
+                    winCounter.textContent = `Wins: ${_playerOne.wins}`;
                     _ultimateWinner();
                     setTimeout(_resetGame, 2500);
                 } else {
@@ -133,7 +150,18 @@ const displayController = ((_playerOne, _playerTwo) => {
             // check for TIE
             if (turn === 9 && !winner) {
                 alert('Tied!');
+                _resetGame();
             };
+
+            // this is running twice... why?
+            const quitBtn = document.querySelector('.quit-button');
+            quitBtn.addEventListener('click', () => {
+                console.log('quitBtn was clicked');
+                
+                _resetGame();
+                _playerTwo.wins++;
+                console.log(_playerTwo.wins)
+            })
         };
     };
 
@@ -160,7 +188,7 @@ const displayController = ((_playerOne, _playerTwo) => {
                         _newDiv.textContent = _gameArray[_index];
                         turn++;
 
-                        setTimeout(_gameLogic, 100);
+                        setTimeout(_gameLogic, 50);
 
                         console.log("Turn " + turn, gameboard.gameArray)
                     } else {
@@ -220,13 +248,24 @@ const displayController = ((_playerOne, _playerTwo) => {
 
     };
 
+    const setName = () => {
+        const submitBtn = document.querySelector('#submit-name');
+        submitBtn.addEventListener('click', () => {
+            const submittedName = document.querySelector('#name-input').value;
+            _playerOne.name = submittedName
+            console.log('This is being logged ' + _playerOne.name);
+        })
+    }
+
     // Expose these items
     return {
         createGameboard,
-        pickMarker
+        pickMarker,
+        setName
     };
 
 })();
 
 displayController.createGameboard();
 displayController.pickMarker();
+displayController.setName();
