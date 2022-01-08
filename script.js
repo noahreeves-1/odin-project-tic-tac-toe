@@ -151,17 +151,7 @@ const displayController = ((_playerOne, _playerTwo) => {
             if (turn === 9 && !winner) {
                 alert('Tied!');
                 _resetGame();
-            };
-
-            // this is running twice... why?
-            const quitBtn = document.querySelector('.quit-button');
-            quitBtn.addEventListener('click', () => {
-                console.log('quitBtn was clicked');
-                
-                _resetGame();
-                _playerTwo.wins++;
-                console.log(_playerTwo.wins)
-            })
+            };            
         };
     };
 
@@ -257,11 +247,50 @@ const displayController = ((_playerOne, _playerTwo) => {
         })
     }
 
+    const quitGame = () => {
+        const quitBtn = document.querySelector('.quit-button');
+
+        quitBtn.addEventListener('click', () => {
+            console.log('quitBtn was clicked');
+
+            _playerTwo.wins++;
+            console.log(_playerTwo.wins)
+
+            const boardPieces = document.querySelectorAll('.boardPiece');
+            boardPieces.forEach((piece) => {
+                piece.textContent = '';
+            });
+
+            for (let i = 0; i < _gameArray.length; i++) {
+                _gameArray[i] = ''
+            };
+
+            winner = '';
+            turn = 0;
+            display.textContent = "You quit! Computer wins.";
+            winCounter.textContent = `Wins: ${_playerOne.wins}`;
+
+            console.log(_gameArray);
+
+            if (_playerTwo.wins === 3) {
+                let _ultimateWinner = _playerTwo.name;
+                // let _ultimateWinnerWins = _playerTwo.wins;
+                display.textContent = `${_ultimateWinner} won best out of five!`;
+                winCounter.textContent = `Wins: ${_playerOne.wins}`;
+                winner = '';
+                _playerOne.wins = 0;
+                _playerTwo.wins = 0;
+                turn = 0;
+            }
+        })
+    }
+
     // Expose these items
     return {
         createGameboard,
         pickMarker,
-        setName
+        setName,
+        quitGame
     };
 
 })();
@@ -269,3 +298,4 @@ const displayController = ((_playerOne, _playerTwo) => {
 displayController.createGameboard();
 displayController.pickMarker();
 displayController.setName();
+displayController.quitGame();
