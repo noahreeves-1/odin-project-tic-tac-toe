@@ -22,6 +22,8 @@ const createPlayer = (name, marker) => {
 // MODULE DISPLAY CONTROLLER //
 const displayController = ((_playerOne, _playerTwo) => {
 
+    let numberOfGrids = 3;
+
     _playerOne = createPlayer('fdsa', 'X');
     _playerTwo = createPlayer('Computer', 'O');
 
@@ -38,7 +40,7 @@ const displayController = ((_playerOne, _playerTwo) => {
             let winner = '';
 
             const _ultimateWinner = () => {
-                if (_playerOne.wins === 3) {
+                if (_playerOne.wins === numberOfGrids) {
                     let _ultimateWinner = _playerOne.name;
                     let _ultimateWinnerWins = _playerOne.wins;
                     display.textContent = `${_ultimateWinner} won best out of five!`;
@@ -47,7 +49,7 @@ const displayController = ((_playerOne, _playerTwo) => {
                     _playerOne.wins = 0;
                     _playerTwo.wins = 0;
                     turn = 0;
-                } else if (_playerTwo.wins === 3) {
+                } else if (_playerTwo.wins === numberOfGrids) {
                     let _ultimateWinner = _playerTwo.name;
                     let _ultimateWinnerWins = _playerTwo.wins;
                     display.textContent = `${_ultimateWinner} won best out of five!`;
@@ -80,7 +82,8 @@ const displayController = ((_playerOne, _playerTwo) => {
 
             const _assignWinner = () => {
 
-                console.log('assignWinner() ran');
+                console.log('assignWinner() ran'); // just making sure it's running
+
                 if (marker === _playerOne.marker) {
                     winner = _playerOne;
                     winner.wins++;
@@ -100,52 +103,58 @@ const displayController = ((_playerOne, _playerTwo) => {
                 }
             };
 
-            // check rows
-            if (_gameArray[0] != '' &&
-                _gameArray[0] === _gameArray[1] &&
-                _gameArray[1] === _gameArray[2]) {
-                marker = _gameArray[0];
-                _assignWinner();
-            } else if (_gameArray[3] != '' &&
-                _gameArray[3] === _gameArray[4] &&
-                _gameArray[4] === _gameArray[5]) {
-                marker = _gameArray[3];
-                _assignWinner();
-            } else if (_gameArray[6] != '' &&
-                _gameArray[6] === _gameArray[7] &&
-                _gameArray[7] === _gameArray[8]) {
-                marker = _gameArray[6];
-                _assignWinner();
+            // check rows IIFE
+            const _checkRows= (() => {
+                for (i = 0; i < numberOfGrids; i++) {
+                    let _rows = [];
+                    for (let j = i * numberOfGrids; j < i * numberOfGrids + numberOfGrids; j++) {
+                        _rows.push(_gameArray[j]);
+                    } // inner loop
+                        
+                    if (_rows.every(field => field === 'X') || _rows.every(field => field === "O")) {
+                        marker = _rows[0];
+                        _assignWinner();
+                    }
+                } // first for loop
+            })();
 
-                // check columns
-            } else if (_gameArray[0] != '' &&
-                _gameArray[0] === _gameArray[3] &&
-                _gameArray[3] === _gameArray[6]) {
-                marker = _gameArray[0];
-                _assignWinner();
-            } else if (_gameArray[1] != '' &&
-                _gameArray[1] === _gameArray[4] &&
-                _gameArray[4] === _gameArray[7]) {
-                marker = _gameArray[1];
-                _assignWinner();
-            } else if (_gameArray[2] != '' &&
-                _gameArray[2] === _gameArray[5] &&
-                _gameArray[5] === _gameArray[8]) {
-                marker = _gameArray[2];
-                _assignWinner();
+            // check columns IIFE
+            const _checkColumns = (() => {
+                for (i = 0; i < numberOfGrids; i++) {
+                    let _columns = [];
 
-                // check diagonals
-            } else if (_gameArray[0] != '' &&
-                _gameArray[0] === _gameArray[4] &&
-                _gameArray[4] === _gameArray[8]) {
-                marker = _gameArray[0];
-                _assignWinner();
-            } else if (_gameArray[2] != '' && _gameArray[2] === _gameArray[4] && _gameArray[4] === _gameArray[6]) {
-                marker = _gameArray[2];
-                _assignWinner();
-            } else {
-                console.log(`no winner yet`)
-            };
+                    for (j = 0; j < numberOfGrids; j++) {
+                        _columns.push(_gameArray[(j * numberOfGrids + i)])
+                    }
+
+                    if (_columns.every(field => field === "X") || _columns.every(field => field === "O")) {
+                        marker = _columns[0];
+                        _assignWinner();
+                    }
+                }
+            })();
+
+            // check diagonals IIFE
+            const _checkDiagonals = (() => {
+                let _diagonal1 = [];
+                for (i = 0; i < numberOfGrids; i++) {
+                    _diagonal1.push(_gameArray[(i * (numberOfGrids + 1))]);
+                }
+                if (_diagonal1.every(field => field === "X") || _diagonal1.every(field => field === "O")) {
+                    marker = _diagonal1[0];
+                    _assignWinner();
+                }
+
+                let _diagonal2 = [];
+                for (i = 1; i < numberOfGrids + 1; i++) {
+                    _diagonal2.push(_gameArray[i * 2]);
+                }
+                if (_diagonal2.every((field) => field === "X") || _diagonal2.every((field) => field === "O")) {
+                    marker = _diagonal2[0];
+                    _assignWinner();
+                }
+
+            })();
 
             // check for TIE
             if (turn === 9 && !winner) {
